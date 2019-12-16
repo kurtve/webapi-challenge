@@ -96,4 +96,23 @@ router.put('/:id', (req, res) => {
   }
 });
 
+// get actions for a specified project
+router.get('/:id/actions', (req, res) => {
+  const rawId = req.params.id;
+  const id = Number.parseInt(rawId);
+  // first check if project is present
+  ProjectModel.get(id)
+    .then(project => {
+      if (project) {
+        // now return just the actions for this project
+        res.json(project.actions);
+      } else {
+        res.status(404).json({ error: `Project ${rawId} not found` });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Error retrieving project actions' });
+    });
+});
+
 module.exports = router;
