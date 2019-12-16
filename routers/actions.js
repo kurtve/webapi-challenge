@@ -1,5 +1,5 @@
 const express = require('express');
-const aModel = require('../data/helpers/actionModel.js');
+const ActionModel = require('../data/helpers/actionModel.js');
 
 const router = express.Router();
 

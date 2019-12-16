@@ -1,5 +1,5 @@
 const express = require('express');
-const pModel = require('../data/helpers/projectModel.js');
+const ProjectModel = require('../data/helpers/projectModel.js');
 
 const router = express.Router();
 
@@ -7,31 +7,51 @@ const router = express.Router();
 
 // handle get all request
 router.get('/', (req, res) => {
-  res.json(pModel.get());
+  ProjectModel.get()
+    .then(projects => {
+      if (projects) {
+        res.json(projects);
+      } else {
+        res.status(404).json({ error: 'Error retrieving projects' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Error retrieving projects' });
+    });
 });
 
 // handle get by id request
 router.get('/:id', (req, res) => {
   const rawId = req.params.id;
   const id = Number.parseInt(rawId);
-  const project = pModel.get(id);
-  if (project) {
-    res.json(project);
-  } else {
-    res.status(404).json({ error: `Project ${rawId} not found` });
-  }
+  ProjectModel.get(id)
+    .then(project => {
+      if (project) {
+        res.json(project);
+      } else {
+        res.status(404).json({ error: `Project ${rawId} not found` });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Error retrieving project' });
+    });
 });
 
 // handle delete request
 router.delete('/:id', (req, res) => {
   const rawId = req.params.id;
   const id = Number.parseInt(rawId);
-  const deleted = pModel.remove(id);
-  if (deleted) {
-    res.status(202).json({ delete_count: deleted });
-  } else {
-    res.status(404).json({ error: `Project ${rawId} not found` });
-  }
+  ProjectModel.remove(id)
+    .then(deleted => {
+      if (deleted) {
+        res.status(200).json({ delete_count: deleted });
+      } else {
+        res.status(404).json({ error: `Project ${rawId} not found` });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Error deleting project' });
+    });
 });
 
 // handle post request
@@ -40,12 +60,17 @@ router.post('/', (req, res) => {
   if (!project.name || !project.description) {
     res.status(400).json({ error: 'Must include name and description' });
   } else {
-    const newProject = pModel.insert(project);
-    if (newProject) {
-      res.status(201).json(newProject);
-    } else {
-      res.status(500).json({ error: 'Unable to add project to database' });
-    }
+    ProjectModel.insert(project)
+      .then(newProject => {
+        if (newProject) {
+          res.status(201).json(newProject);
+        } else {
+          res.status(500).json({ error: 'Unable to add project to database' });
+        }
+      })
+      .catch(err => {
+        res.status(500).json({ error: 'Error adding project' });
+      });
   }
 });
 
@@ -57,12 +82,17 @@ router.put('/:id', (req, res) => {
   if (!project.name || !project.description) {
     res.status(400).json({ error: 'Must include name and description' });
   } else {
-    const newProject = pModel.update(id, project);
-    if (newProject) {
-      res.status(205).json(newProject);
-    } else {
-      res.status(500).json({ error: `Unable to update project ${rawId}` });
-    }
+    ProjectModel.update(id, project)
+      .then(newProject => {
+        if (newProject) {
+          res.status(205).json(newProject);
+        } else {
+          res.status(500).json({ error: `Unable to update project ${rawId}` });
+        }
+      })
+      .catch(err => {
+        res.status(500).json({ error: 'Error updating project' });
+      });
   }
 });
 
