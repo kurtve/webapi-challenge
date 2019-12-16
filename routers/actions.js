@@ -57,8 +57,10 @@ router.delete('/:id', (req, res) => {
 // handle post request
 router.post('/', (req, res) => {
   const action = req.body;
-  if (!action.name || !action.description) {
-    res.status(400).json({ error: 'Must include name and description' });
+  if (!action.notes || !action.description || !action.project_id) {
+    res
+      .status(400)
+      .json({ error: 'Must include description, notes, and project_id' });
   } else {
     ActionModel.insert(action)
       .then(newaction => {
@@ -79,8 +81,10 @@ router.put('/:id', (req, res) => {
   const rawId = req.params.id;
   const id = Number.parseInt(rawId);
   const action = req.body;
-  if (!action.name || !action.description) {
-    res.status(400).json({ error: 'Must include name and description' });
+  if (!action.notes || !action.description || !action.project_id) {
+    res
+      .status(400)
+      .json({ error: 'Must include description, notes, and project_id' });
   } else {
     ActionModel.update(id, action)
       .then(newaction => {
