@@ -40,13 +40,29 @@ Demonstrate your understanding of this Sprint's concepts by answering the follow
 
 - [ ] Mention two parts of Express that you learned about this week.
 
+    - server: creates a server that can respond to HTTP requests
+    - json: middleware that lets you automatically format responses as JSON
+    - router: allows you to partition your server code into distinct endpoints
+
+
 - [ ] Describe Middleware?
+
+    Middleware is software which intercepts a request, performs some operation on it, and then passes it on to the next step (more middleware or the server/router)
+
 
 - [ ] Describe a Resource?
 
+    A resource is some logically related data and/or services that are grouped together and made available to users via an endpoint on the server.
+
+
 - [ ] What can the API return to help clients know if a request was successful?
 
+    The API can return a status code, which gives a high-level indication of success or failure of a request.  It can also return a response body, typically formatted as JSON, containing details about the request.
+
 - [ ] How can we partition our application into sub-applications?
+
+    We can use separate endpoints to break our application into logically distinct parts.  At a code level, we can use express routers to separate our code into different files for each endpoint.
+
 
 ## Minimum Viable Product
 
